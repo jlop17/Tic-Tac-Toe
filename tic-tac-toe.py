@@ -50,16 +50,3 @@ def assign_player():
         if x_o == 'X' or x_o == 'O':
             return Player(x_o)
         print("\nNot a valid entry. Please try again.")
-
-while True:
-    players = input("\n1 player or 2 players?")
-    player1 = assign_player()
-    if players == 1:
-        break
-    if players == 2:
-        if player1.x_o == 'X':
-            player2 = Player('O')
-            break
-        else:
-            player2 = Player('X')
-            break
