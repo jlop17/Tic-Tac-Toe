@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 print('''
 ######### #########  #######  #########    ###     #######  #########  #######  #########
     #         #     #       #     #       #   #   #       #     #     #       # #
@@ -7,42 +5,26 @@ print('''
     #         #     #             #      #######  #             #     #       # #######
     #         #     #             #     #       # #             #     #       # #
     #         #     #       #     #     #       # #       #     #     #       # #
-    #     #########  #######      #     #       #  #######      #      #######  #########
+    #     #########  #######      #     #       #  #######      #      #######  ########
 ''')
 
-grid = [
-    [' ', ' ', ' '],
-    [' ', ' ', ' '],
-    [' ', ' ', ' ']
-]
-
-coords = ((0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2))
-
-space = namedtuple("space", "grid, coords")
-
-A1 = space(grid[0][0], coords[0])
-A2 = space(grid[0][1], coords[1])
-A3 = space(grid[0][2], coords[2])
-B1 = space(grid[1][0], coords[3])
-B2 = space(grid[1][1], coords[4])
-B3 = space(grid[1][2], coords[5])
-C1 = space(grid[2][0], coords[6])
-C2 = space(grid[2][1], coords[7])
-C3 = space(grid[2][2], coords[8])
-
 spaces = {
-    'A1': [A1.grid, A1.coords], 'A2': [grid[0][1], coords[1]], 'A3': [grid[0][2], coords[2]],
-    'B1': [grid[1][0], coords[3]], 'B2': [grid[1][1], coords[4]], 'B3': [grid[1][2], coords[5]],
-    'C1': [grid[2][0], coords[6]], 'C2': [grid[2][1], coords[7]], 'C3': [grid[2][2], coords[8]]
+    'A1': ' ', 'A2': ' ', 'A3': ' ',
+    'B1': ' ', 'B2': ' ', 'B3': ' ',
+    'C1': ' ', 'C2': ' ', 'C3': ' '
     }
 
-board = f'''
+board = ''
+
+def update_board():
+    global board
+    board = f'''
    1   2   3
-A  {spaces['A1'][0]} | {spaces['A2'][0]} | {spaces['A3'][0]}
+A  {spaces['A1']} | {spaces['A2']} | {spaces['A3']}
   ------------
-B  {spaces['B1'][0]} | {spaces['B2'][0]} | {spaces['B3'][0]}
+B  {spaces['B1']} | {spaces['B2']} | {spaces['B3']}
   ------------
-C  {spaces['C1'][0]} | {spaces['C2'][0]} | {spaces['C3'][0]}
+C  {spaces['C1']} | {spaces['C2']} | {spaces['C3']}
 '''
 
 class Player:
@@ -53,14 +35,27 @@ class Player:
 
     def play(self, space):
         while True:
-            if space in spaces.keys() and spaces[space][0] == " ":
-                grid = self.x_o
+            if space in spaces.keys() and spaces[space] == " ":
+                spaces[space] = self.x_o
                 self.moves.append(space)
-                win_check(space)
+                self.win(space)
                 break
             else:
                 print("\nNot a valid space. Please try again.")
+        update_board()
         print(board)
+    
+    def win(self, space):
+        win_conditions = [
+            [space for space in spaces if space[0] == 'A'],
+            [space for space in spaces if space[0] == 'B'],
+            [space for space in spaces if space[0] == 'C'],
+            [space for space in spaces if space[1] == '1'],
+            [space for space in spaces if space[1] == '2'],
+            [space for space in spaces if space[1] == '3'],
+            ['A1', 'B2', 'C3'],
+            ['C1', 'B2', 'A3']
+        ]
 
 def assign_player():
     while True:
@@ -69,9 +64,5 @@ def assign_player():
             return Player(x_o)
         print("\nNot a valid entry. Please try again.")
 
-def win_check(space):
-    move_coord = spaces[spaces][1]
-    directions = ((move_coord))
-    pass
-
-print(board)
+player1 = Player('X')
+player1.play('A1')
