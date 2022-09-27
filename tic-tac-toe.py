@@ -1,5 +1,3 @@
-from random import randint
-
 print('''
 ######### #########  #######  #########    ###     #######  #########  #######  #########
     #         #     #       #     #       #   #   #       #     #     #       # #
@@ -73,13 +71,8 @@ class Player:
 
         for win_condition in win_conditions:
             if space in win_condition:
-                count = 0
-                for space in win_conditions:
-                    if space not in self.moves:
-                        break
-                    count += 1
-                    if count == 3:
-                        return True
+                if False not in filter(lambda x: x in self.moves, win_condition):
+                    return True
         return False
 
 def assign_player1():
@@ -97,9 +90,3 @@ def assign_player2():
 player1 = assign_player1()
 player2 = assign_player2()
 show_board()
-
-while True:
-    player1.play()
-    if player1.win() == True:
-        
-    player2.play()
