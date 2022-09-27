@@ -1,3 +1,5 @@
+from random import randint
+
 print('''
 ######### #########  #######  #########    ###     #######  #########  #######  #########
     #         #     #       #     #       #   #   #       #     #     #       # #
@@ -14,9 +16,7 @@ spaces = {
     'C1': ' ', 'C2': ' ', 'C3': ' '
     }
 
-board = ''
-
-def update_board():
+def show_board():
     global board
     board = f'''
    1   2   3
@@ -26,6 +26,7 @@ B  {spaces['B1']} | {spaces['B2']} | {spaces['B3']}
   ------------
 C  {spaces['C1']} | {spaces['C2']} | {spaces['C3']}
 '''
+    print(board)
 
 class Player:
     def __init__(self, x_o: str):
@@ -33,17 +34,30 @@ class Player:
         self.score = 0
         self.moves = []
 
-    def play(self, space):
+    def play(self):
+        global spaces
         while True:
+            space = input("\nPlease type the name of a space to play: ").upper()
             if space in spaces.keys() and spaces[space] == " ":
                 spaces[space] = self.x_o
                 self.moves.append(space)
-                self.win(space)
+                if self.win(space):
+                    show_board()
+                    print("\nCONGRATULATIONS, YOU WIN!")
+                    print(f"\nPlayer 1 Wins: {player1.score}\nPlayer 2 Wins: {player2.score}")
+                    again = input("\nPlay again? ")
+                    if again == "Y":
+                        player1.moves = []
+                        player2.moves = []
+                        spaces = {
+                            'A1': ' ', 'A2': ' ', 'A3': ' ',
+                            'B1': ' ', 'B2': ' ', 'B3': ' ',
+                            'C1': ' ', 'C2': ' ', 'C3': ' '
+                            }
+                        show_board()
                 break
             else:
                 print("\nNot a valid space. Please try again.")
-        update_board()
-        print(board)
     
     def win(self, space):
         win_conditions = [
@@ -57,12 +71,35 @@ class Player:
             ['C1', 'B2', 'A3']
         ]
 
-def assign_player():
+        for win_condition in win_conditions:
+            if space in win_condition:
+                count = 0
+                for space in win_conditions:
+                    if space not in self.moves:
+                        break
+                    count += 1
+                    if count == 3:
+                        return True
+        return False
+
+def assign_player1():
     while True:
-        x_o = input("\nPlease type 'X' or 'O' to start game")
+        x_o = input("\nPlease type 'X' or 'O' to start game. ").upper()
         if x_o == 'X' or x_o == 'O':
             return Player(x_o)
         print("\nNot a valid entry. Please try again.")
 
-player1 = Player('X')
-player1.play('A1')
+def assign_player2():
+    if player1.x_o == 'X':
+        return Player('O')
+    return Player('X')
+
+player1 = assign_player1()
+player2 = assign_player2()
+show_board()
+
+while True:
+    player1.play()
+    if player1.win() == True:
+        
+    player2.play()
