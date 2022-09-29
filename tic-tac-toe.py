@@ -10,13 +10,13 @@ spaces = {
 def title():
     os.system('cls' if os.name == 'nt' else 'clear')
     print('''
-######### #########  #######  #########    ###     #######  #########  #######  #########
-    #         #     #       #     #       #   #   #       #     #     #       # #
-    #         #     #             #      #     #  #             #     #       # #
-    #         #     #             #      #######  #             #     #       # #######
-    #         #     #             #     #       # #             #     #       # #
-    #         #     #       #     #     #       # #       #     #     #       # #
-    #     #########  #######      #     #       #  #######      #      #######  ########
+XXXXXXXXX OOOOOOOOO  XXXXXXX  OOOOOOOOO    XXX     OOOOOOO  XXXXXXXXX  OOOOOOO  XXXXXXXX
+    X         O     X       X     O       X   X   O       O     X     O       O X
+    X         O     X             O      X     X  O             X     O       O X
+    X         O     X             O      XXXXXXX  O             X     O       O XXXXXXX
+    X         O     X             O     X       X O             X     O       O X
+    X         O     X       X     O     X       X O       O     X     O       O X
+    X     OOOOOOOOO  XXXXXXX      O     X       X  OOOOOOO      X      OOOOOOO  XXXXXXXX
 ''')
 
 def display():
