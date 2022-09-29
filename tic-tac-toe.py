@@ -44,11 +44,11 @@ class Player:
         global spaces
         display()
         while True:
-            space = input("\nPlease type the name of a space to play: ").upper()
-            if space in spaces.keys() and spaces[space] == " ":
-                spaces[space] = self.x_o
-                self.moves.append(space)
-                if self.win(space):
+            move = input("\nPlease type the name of a space to play: ").upper()
+            if move in spaces.keys() and spaces[move] == " ":
+                spaces[move] = self.x_o
+                self.moves.append(move)
+                if self.win(move):
                     self.score += 1
                     display()
                     print(f"\n{self.x_o} WINS!")
@@ -58,12 +58,12 @@ class Player:
                     print("\nDRAW!")
                     rematch()
                 break
-            if space == "EXIT":
+            if move == "EXIT":
                 sys.exit()
             display()
             print("\nNot a valid space. Please try again.")
 
-    def win(self, space):
+    def win(self, move):
         win_conditions = [
             ('A1', 'A2', 'A3'),
             ('B1', 'B2', 'B3'),
@@ -76,7 +76,7 @@ class Player:
         ]
 
         for win_condition in win_conditions:
-            if space in win_condition:
+            if move in win_condition:
                 count = 0
                 for space in win_condition:
                     if space in self.moves:
