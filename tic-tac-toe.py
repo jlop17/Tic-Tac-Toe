@@ -32,7 +32,6 @@ C  {spaces['C1']} | {spaces['C2']} | {spaces['C3']}
     title()
     print(f"\nSCORE\n{player1.x_o}: {player1.score}\n{player2.x_o}: {player2.score}\nD: {draw_count}")
     print(board)
-    print(f"\n{current_player.x_o} Turn")
 
 class Player:
     def __init__(self, x_o: str):
@@ -43,6 +42,7 @@ class Player:
     def play(self):
         global spaces
         display()
+        print(f"\n{current_player.x_o} Turn")
         while True:
             move = input("\nType space to play: ").upper()
             if move in spaces.keys() and spaces[move] == " ":
@@ -60,6 +60,7 @@ class Player:
             if move == "QUIT":
                 sys.exit()
             display()
+            print(f"\n{current_player.x_o} Turn")
             print("\nInvalid space. Please try again.")
 
     def win(self, move):
@@ -123,20 +124,22 @@ def rematch():
                 'C1': ' ', 'C2': ' ', 'C3': ' '
                 }
             display()
+            print(f"\n{current_player.x_o} Turn")
             break
         if rematch == "N":
             print("\n\nTHANKS FOR PLAYING!\n\n")
             sys.exit()
         display()
+        print(f"\n{current_player.x_o} Turn")
         print("Invalid entry. Please try again.")
 
 title()
 print("\n")
-
 player1, player2 = assign_players()
 
-current_player = player1
 display()
+current_player = player1
+print(f"\n{current_player.x_o} Turn")
 
 while True:
     current_player = player1
