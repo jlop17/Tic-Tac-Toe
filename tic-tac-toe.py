@@ -1,10 +1,14 @@
 import sys
 import os
 
-def clear():
-    os.system('cls' if os.name == 'nt' else 'clear')
+spaces = {
+    'A1': ' ', 'A2': ' ', 'A3': ' ',
+    'B1': ' ', 'B2': ' ', 'B3': ' ',
+    'C1': ' ', 'C2': ' ', 'C3': ' '
+    }
 
 def title():
+    os.system('cls' if os.name == 'nt' else 'clear')
     print('''
 ######### #########  #######  #########    ###     #######  #########  #######  #########
     #         #     #       #     #       #   #   #       #     #     #       # #
@@ -15,15 +19,7 @@ def title():
     #     #########  #######      #     #       #  #######      #      #######  ########
 ''')
 
-title()
-
-spaces = {
-    'A1': ' ', 'A2': ' ', 'A3': ' ',
-    'B1': ' ', 'B2': ' ', 'B3': ' ',
-    'C1': ' ', 'C2': ' ', 'C3': ' '
-    }
-
-def show_board():
+def display():
     global board
     board = f'''
    1   2   3
@@ -33,7 +29,10 @@ B  {spaces['B1']} | {spaces['B2']} | {spaces['B3']}
   ------------
 C  {spaces['C1']} | {spaces['C2']} | {spaces['C3']}
 '''
+    title()
+    print(f"\nSCORE\n{player1.x_o}: {player1.score}\n{player2.x_o}: {player2.score}")
     print(board)
+    print(f"\n{current_player.x_o} Turn")
 
 class Player:
     def __init__(self, x_o: str):
@@ -43,38 +42,37 @@ class Player:
 
     def play(self):
         global spaces
+        display()
         while True:
             space = input("\nPlease type the name of a space to play: ").upper()
             if space in spaces.keys() and spaces[space] == " ":
                 spaces[space] = self.x_o
                 self.moves.append(space)
-                clear()
-                title()
-                scores()
-                show_board()
                 if self.win(space):
                     self.score += 1
+                    display()
                     print(f"\n{self.x_o} WINS!")
                     rematch()
                 if draw():
+                    display()
                     print("\nDRAW!")
                     rematch()
                 break
             if space == "EXIT":
                 sys.exit()
-            else:
-                print("\nNot a valid space. Please try again.")
+            display()
+            print("\nNot a valid space. Please try again.")
 
     def win(self, space):
         win_conditions = [
-            [space for space in spaces if space[0] == 'A'],
-            [space for space in spaces if space[0] == 'B'],
-            [space for space in spaces if space[0] == 'C'],
-            [space for space in spaces if space[1] == '1'],
-            [space for space in spaces if space[1] == '2'],
-            [space for space in spaces if space[1] == '3'],
-            ['A1', 'B2', 'C3'],
-            ['C1', 'B2', 'A3']
+            ('A1', 'A2', 'A3'),
+            ('B1', 'B2', 'B3'),
+            ('C1', 'C2', 'C3'),
+            ('A1', 'B1', 'C1'),
+            ('A2', 'B2', 'C2'),
+            ('A3', 'B3', 'C3'),
+            ('A1', 'B2', 'C3'),
+            ('C1', 'B2', 'A3')
         ]
 
         for win_condition in win_conditions:
@@ -87,24 +85,21 @@ class Player:
                         return True
         return False
     
-def assign_player1():
+def assign_players():
     while True:
         x_o = input("\nPlease type 'X' or 'O' to start game. ").upper()
         if x_o == 'X' or x_o == 'O':
-            clear()
-            title()
-            return Player(x_o)
+            player1 = Player(x_o)
+            break
         if x_o == "EXIT":
             sys.exit()
+        title()
         print("\nNot a valid entry. Please try again.")
-
-def assign_player2():
     if player1.x_o == 'X':
-        return Player('O')
-    return Player('X')
-
-def scores():
-    print(f"\nScore\n{player1.x_o}: {player1.score}\n{player2.x_o}: {player2.score}")
+        player2 = Player('O')
+    else:
+        player2 = Player('X')
+    return player1, player2
 
 def draw():
     if ' ' not in spaces.values():
@@ -123,24 +118,25 @@ def rematch():
                 'B1': ' ', 'B2': ' ', 'B3': ' ',
                 'C1': ' ', 'C2': ' ', 'C3': ' '
                 }
-            clear()
-            title()
-            scores()
-            show_board()
+            display()
             break
         if rematch == "N":
-            print("\nTHANKS FOR PLAYING!")
+            print("\nThanks for playing!")
             sys.exit()
-        print("\nNot a valid entry. Please try again.")
+        display()
+        print("Not a valid entry. Please try again.")
 
-player1 = assign_player1()
-player2 = assign_player2()
+title()
+print("\n")
 
-scores()
-show_board()
+player1, player2 = assign_players()
+
+current_player = player1
+
+display()
 
 while True:
-    print(f"\n{player1.x_o} Turn")
+    current_player = player1
     player1.play()
-    print(f"\n{player2.x_o} Turn")
+    current_player = player2
     player2.play()
