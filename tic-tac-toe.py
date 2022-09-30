@@ -7,6 +7,8 @@ spaces = {
     'C1': ' ', 'C2': ' ', 'C3': ' '
     }
 
+draws = 0
+
 def title():
     os.system('cls' if os.name == 'nt' else 'clear')
     print('''
@@ -30,119 +32,117 @@ B  {spaces['B1']} | {spaces['B2']} | {spaces['B3']}
 C  {spaces['C1']} | {spaces['C2']} | {spaces['C3']}
 '''
     title()
-    print(f"\nSCORE\n{player1.x_o}: {player1.score}\n{player2.x_o}: {player2.score}\nD: {draw_count}")
+    print(f"\nSCORE\n{player1.x_o}: {player1.score}\n{player2.x_o}: {player2.score}\nD: {draws}")
     print(board)
+
+def quit():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    sys.exit()
 
 class Player:
     def __init__(self, x_o: str):
         self.x_o = x_o
         self.score = 0
-        self.moves = []
+        self.owned_spaces = []
 
-    def play(self):
-        global spaces
-        display()
-        print(f"\n{current_player.x_o} Turn")
-        while True:
-            move = input("\nType space to play: ").upper()
-            if move in spaces.keys() and spaces[move] == " ":
-                spaces[move] = self.x_o
-                self.moves.append(move)
-                if self.win(move):
-                    display()
-                    print(f"\n{self.x_o} WINS!")
-                    rematch()
-                if draw():
-                    display()
-                    print("\nDRAW!")
-                    rematch()
-                break
-            if move == "QUIT":
-                sys.exit()
-            display()
-            print(f"\n{current_player.x_o} Turn")
-            print("\nInvalid space. Please try again.")
+    def turn(self):
+        def win(move):
+            win_conditions = [
+                ('A1', 'A2', 'A3'),
+                ('B1', 'B2', 'B3'),
+                ('C1', 'C2', 'C3'),
+                ('A1', 'B1', 'C1'),
+                ('A2', 'B2', 'C2'),
+                ('A3', 'B3', 'C3'),
+                ('A1', 'B2', 'C3'),
+                ('C1', 'B2', 'A3')
+            ]
 
-    def win(self, move):
-        win_conditions = [
-            ('A1', 'A2', 'A3'),
-            ('B1', 'B2', 'B3'),
-            ('C1', 'C2', 'C3'),
-            ('A1', 'B1', 'C1'),
-            ('A2', 'B2', 'C2'),
-            ('A3', 'B3', 'C3'),
-            ('A1', 'B2', 'C3'),
-            ('C1', 'B2', 'A3')
-        ]
-
-        for win_condition in win_conditions:
-            if move in win_condition:
-                count = 0
-                for space in win_condition:
-                    if space in self.moves:
+            for win_condition in win_conditions:
+                if move in win_condition:
+                    count = 0
+                    for space in win_condition:
+                        if space not in self.owned_spaces:
+                            break
                         count += 1
-                    if count == 3:
-                        self.score += 1
-                        return True
-        return False
-    
-def assign_players():
-    while True:
-        x_o = input("\n'X' or 'O'? ").upper()
-        if x_o == 'X' or x_o == 'O':
-            player1 = Player(x_o)
-            break
-        if x_o == "QUIT":
-            sys.exit()
-        title()
-        print("\nInvalid entry. Please try again.")
-    if player1.x_o == 'X':
-        player2 = Player('O')
-    else:
-        player2 = Player('X')
-    return player1, player2
+                        if count == 3:
+                            self.score += 1
+                            return True
+            return False
 
-draw_count = 0
+        def rematch():
+            global spaces
+            while True:
+                rematch = input("\nPlay again (Y/N)? ").upper()
+                if rematch == "Y":
+                    player1.owned_spaces = []
+                    player2.owned_spaces = []
+                    spaces = {
+                        'A1': ' ', 'A2': ' ', 'A3': ' ',
+                        'B1': ' ', 'B2': ' ', 'B3': ' ',
+                        'C1': ' ', 'C2': ' ', 'C3': ' '
+                        }
+                    break
+                if rematch == "N" or rematch == "QUIT" or rematch == "EXIT":
+                    quit()
+                display()
+                print("\nInvalid entry. Please try again.")
 
-def draw():
-    global draw_count
-    if ' ' not in spaces.values():
-        draw_count += 1
-        return True
-    return False
+        def mark(move):
+            global draws
+            spaces[move] = self.x_o
+            self.owned_spaces.append(move)
+            if win(move):
+                display()
+                print(f"\n{self.x_o} WINS!")
+                rematch()
+            elif ' ' not in spaces.values():
+                draws += 1
+                display()
+                print("\nDRAW!")
+                rematch()
 
-def rematch():
-    global spaces
-    while True:
-        rematch = input("\nPlay again (Y/N)? ").upper()
-        if rematch == "Y":
-            player1.moves = []
-            player2.moves = []
-            spaces = {
-                'A1': ' ', 'A2': ' ', 'A3': ' ',
-                'B1': ' ', 'B2': ' ', 'B3': ' ',
-                'C1': ' ', 'C2': ' ', 'C3': ' '
-                }
+        def play():
             display()
-            print(f"\n{current_player.x_o} Turn")
-            break
-        if rematch == "N":
-            print("\n\nTHANKS FOR PLAYING!\n\n")
-            sys.exit()
-        display()
-        print(f"\n{current_player.x_o} Turn")
-        print("Invalid entry. Please try again.")
+            print(f"\n{self.x_o} Turn")
+            while True:
+                move = input("\nType SPACE NAME to PLAY: ").upper()
+                if move in spaces.keys() and spaces[move] == " ":
+                    mark(move)
+                    break
+                if move == "QUIT" or move == "EXIT":
+                    quit()
+                display()
+                print(f"\n{self.x_o} Turn")
+                print("\nInvalid entry. Please try again.")
+
+        def autoplay():
+            for move, mark in spaces.items():
+                if mark == ' ':
+                    mark(move)
+
+        if list(spaces.values()).count(' ') == 1:
+            autoplay()
+        else:
+            play()
 
 title()
 print("\n")
-player1, player2 = assign_players()
-
-display()
-current_player = player1
-print(f"\n{current_player.x_o} Turn")
 
 while True:
-    current_player = player1
-    player1.play()
-    current_player = player2
-    player2.play()
+    x_o = input("\n'X' or 'O'? ").upper()
+    if x_o == 'X' or x_o == 'O':
+        player1 = Player(x_o)
+        break
+    if x_o == "QUIT" or x_o == "EXIT":
+        quit()
+    title()
+    print("\nInvalid entry. Please try again.")
+if player1.x_o == 'X':
+    player2 = Player('O')
+else:
+    player2 = Player('X')
+
+while True:
+    player1.turn()
+    player2.turn()
