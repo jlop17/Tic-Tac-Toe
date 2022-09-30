@@ -108,11 +108,17 @@ class Player:
             print(f"\n{self.x_o} Turn")
             while True:
                 move = input("\nType SPACE NAME to PLAY: ").upper()
-                if move in spaces.keys() and spaces[move] == " ":
-                    mark(move)
-                    break
-                if move == "QUIT" or move == "EXIT":
-                    quit()
+                try:
+                    if isinstance(int(move[0]), int):
+                        move = move[1] + move[0]
+                except ValueError:
+                    pass
+                finally:
+                    if move in spaces.keys() and spaces[move] == " ":
+                        mark(move)
+                        break
+                    if move == "QUIT" or move == "EXIT":
+                        quit()
                 display()
                 print(f"\n{self.x_o} Turn")
                 print("\nInvalid entry. Please try again.")
