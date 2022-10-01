@@ -1,0 +1,4 @@
+# Tic-Tac-Toe
+Tic-Tac-Toe Python Terminal Game
+
+At the start of the game, the first player is asked to choose between "X" or "O". The players then take turns choosing spaces to mark. The squares on the board are all named with a combination of A, B, or C and 1, 2, or 3. It's possible for a space to be selected as any combination of letter and number. For example, a player can enter B2 or 2B, in either upper or lower case. The space entered is marked with their letter, and the next player is asked to make their move. If there is only one empty space available, the game automatically fills it in with the next player's mark. The first player to own three sequential spaces either horizontally, vertically, or diagonally wins. Both player's total wins and draws are constantly displayed. At any point, the game can be exited by typing "exit" or "quit".
